@@ -6,10 +6,11 @@ import models.interface as i_face
 
 
 YAML_PATH = './cloudwatch_cnf.yml'
+YAML_KEY_LIST = ['lambda_function_names', 'white_list', 'black_list']
 
 def request_logs_from_cloudwatch(start_unix, end_unix):
     client = boto3.client('logs')
-    target_names = load_target_names()
+    target_names = load_from_yml(key_index=YAML_KEY_LIST.index('lambda_function_names'))
 
     log_group = '/aws/lambda/{}'.format(target_names[0])
     return client.filter_log_events(
@@ -19,10 +20,19 @@ def request_logs_from_cloudwatch(start_unix, end_unix):
     )
 
 
-def load_target_names():
-    with open(YAML_PATH, mode='r+') as yaml_data:
-        lambda_function_names = yaml.load(yaml_data)['lambda_function_names']
-    return lambda_function_names
+def load_from_yml(key_index):
+    with open(YAML_PATH, mode='r+') as yml_data:
+        data_in_yml = yaml.load(yml_data) \
+                          .get(YAML_KEY_LIST[key_index])
+    return data_in_yml
+
+
+def make_response_confortable(response):
+    result = pd.DataFrame.from_dict(response['events'])
+    filtered_result = filter_logs(result)
+    filtered_result.loc[:, 'ingestionTime'] = convert_unix_column_to_datetime(filtered_result['ingestionTime'])
+    filtered_result.loc[:, 'timestamp'] = convert_unix_column_to_datetime(filtered_result['timestamp'])
+    return filtered_result
 
 
 def convert_unix_column_to_datetime(series):
@@ -30,6 +40,26 @@ def convert_unix_column_to_datetime(series):
     return (series / 1000).astype(int) \
                           .map(unix_to_datetime) \
                           .astype(str)
+
+
+def filter_logs(logs):
+    tmp_logs = logs.copy()
+    whitelist = load_from_yml(key_index=YAML_KEY_LIST.index('white_list'))
+    if whitelist is not None:
+        tmp_logs = tmp_logs[include(tmp_logs, whitelist)]
+
+    blacklist = load_from_yml(key_index=YAML_KEY_LIST.index('black_list'))
+    if blacklist is None:
+        return tmp_logs
+
+    return tmp_logs[~include(tmp_logs, blacklist)]
+
+
+def include(tmp_logs, pattern_list):
+    pattern = '|'.join(pattern_list)
+    return tmp_logs['eventId'].str.contains(pattern) \
+        | tmp_logs['logStreamName'].str.contains(pattern) \
+        | tmp_logs['message'].str.contains(pattern)
 
 
 if __name__ == '__main__':
@@ -51,10 +81,7 @@ if __name__ == '__main__':
 
     start_unix, end_unix = ask_log_period()
     response = request_logs_from_cloudwatch(start_unix=start_unix, end_unix=end_unix)
-    result = pd.DataFrame.from_dict(response['events'])
-
-    result['ingestionTime'] = convert_unix_column_to_datetime(result['ingestionTime'])
-    result['timestamp'] = convert_unix_column_to_datetime(result['timestamp'])
+    result = make_response_confortable(response)
 
     # import pdb; pdb.set_trace()
-    # result.to_csv('./cwl_events.csv')
+    result.to_csv('./cwl_events.csv')

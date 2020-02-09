@@ -38,3 +38,24 @@ $ python main.py
 
 # input year, month, day, hour and hours of period along to prompt
 ```
+
+## Option
+
+### Filtering events of ClowdWatch Logs
+
+You can filter the event-logs and exclude unnecessary logs, with following settings.
+Filtering target is the column of 'eventId', 'logStreamName' or 'message'.
+
+```yaml
+# Edit cloudwatch_cnf.yml
+
+# INFO: the logs, containing any of the strings in this whitelist, only remain
+white_list:
+  - keyword1
+  - keyword2
+
+# INFO: the logs, containing any of the strings in this blacklist, are excluded
+black_list:
+  - keyword3
+  - keyword4
+```

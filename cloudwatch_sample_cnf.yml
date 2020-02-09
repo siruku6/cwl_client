@@ -1,3 +1,13 @@
 lambda_function_names:
   - hoge_function
   - hello_function
+
+# INFO: the logs, containing any of the strings in this whitelist, only remain
+# white_list:
+#   - keyword1
+#   - keyword2
+
+# INFO: the logs, containing any of the strings in this blacklist, are excluded
+black_list:
+  - keyword3
+  - keyword4
