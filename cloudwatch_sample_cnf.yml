@@ -2,6 +2,9 @@ lambda_function_names:
   - hoge_function
   - hello_function
 
+# INFO: the log streams containing following prefix only remain
+log_stream_name_prefix: '2020/0x/xx'
+
 # INFO: the logs, containing any of the strings in this whitelist, only remain
 # white_list:
 #   - keyword1

@@ -6,18 +6,30 @@ import models.interface as i_face
 
 
 YAML_PATH = './cloudwatch_cnf.yml'
-YAML_KEY_LIST = ['lambda_function_names', 'white_list', 'black_list']
+YAML_KEY_LIST = [
+    'lambda_function_names',
+    'log_stream_name_prefix',
+    'white_list',
+    'black_list'
+]
 
-def request_logs_from_cloudwatch(start_unix, end_unix):
+def request_logs_from_cloudwatch(start_unix=None, end_unix=None, stream_prefix=None):
     client = boto3.client('logs')
     target_names = load_from_yml(key_index=YAML_KEY_LIST.index('lambda_function_names'))
 
     log_group = '/aws/lambda/{}'.format(target_names[0])
-    return client.filter_log_events(
-        logGroupName=log_group,
-        startTime=start_unix,
-        endTime=end_unix
-    )
+    if stream_prefix is not None:
+        response = client.filter_log_events(
+            logGroupName=log_group,
+            logStreamNamePrefix=stream_prefix,
+        )
+    else:
+        response = client.filter_log_events(
+            logGroupName=log_group,
+            startTime=start_unix,
+            endTime=end_unix
+        )
+    return response
 
 
 def load_from_yml(key_index):
@@ -79,8 +91,16 @@ if __name__ == '__main__':
 
         return start_unix, end_unix
 
-    start_unix, end_unix = ask_log_period()
-    response = request_logs_from_cloudwatch(start_unix=start_unix, end_unix=end_unix)
+    use_span_filter = i_face.ask_true_or_false('Would you like to filter logs by span ? ... [1] yes, [2] No : ')
+    start_unix = end_unix = stream_prefix = None
+    if use_span_filter:
+        start_unix, end_unix = ask_log_period()
+    else:
+        stream_prefix = load_from_yml(key_index=YAML_KEY_LIST.index('log_stream_name_prefix'))
+
+    response = request_logs_from_cloudwatch(
+        start_unix=start_unix, end_unix=end_unix, stream_prefix=stream_prefix
+    )
     if response['events'] == []:
         print('response is blank ...')
         exit()
