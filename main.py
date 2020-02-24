@@ -81,6 +81,9 @@ if __name__ == '__main__':
 
     start_unix, end_unix = ask_log_period()
     response = request_logs_from_cloudwatch(start_unix=start_unix, end_unix=end_unix)
+    if response['events'] == []:
+        print('response is blank ...')
+        exit()
     result = make_response_confortable(response)
 
     # import pdb; pdb.set_trace()
