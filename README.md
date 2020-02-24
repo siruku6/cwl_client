@@ -49,6 +49,9 @@ Filtering target is the column of 'eventId', 'logStreamName' or 'message'.
 ```yaml
 # Edit cloudwatch_cnf.yml
 
+# INFO: the log streams containing following prefix only remain, when you do not filter logs by span
+log_stream_name_prefix: '2020/0x/xx'
+
 # INFO: the logs, containing any of the strings in this whitelist, only remain
 white_list:
   - keyword1
