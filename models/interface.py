@@ -8,7 +8,7 @@ def ask_true_or_false(msg):
         elif selection == 2:
             return False
         else:
-            print('[Trader] please input 1 - 2 ! >д<;')
+            print('please input 1 - 2 ! >д<;')
 
 
 def ask_number(msg, limit):
