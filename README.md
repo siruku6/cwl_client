@@ -1,3 +1,7 @@
+# cwl_client &mdash; Client made with python for AWS CloudWatch Logs
+
+[![Build Status](https://travis-ci.org/siruku6/cwl_client.svg?branch=master)](https://travis-ci.org/siruku6/cwl_client)
+
 # Summary
 
 This is the client for AWS CloudWatch Logs  
@@ -11,7 +15,7 @@ It is expected to setup aws-cli for your AWS account.
 ## pip modules
 Execute the following command, then required modules will be installed.
 ```
-$ sudo pip install -r requirments.txt
+$ sudo pip install -r requirements.txt
 ```
 # How to use
 
