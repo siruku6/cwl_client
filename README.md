@@ -1,6 +1,7 @@
 # cwl_client &mdash; Client made with python for AWS CloudWatch Logs
 
 [![Build Status](https://travis-ci.org/siruku6/cwl_client.svg?branch=master)](https://travis-ci.org/siruku6/cwl_client)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1981f3ac715ed063ca1b/maintainability)](https://codeclimate.com/github/siruku6/cwl_client/maintainability)
 
 # Summary
 
