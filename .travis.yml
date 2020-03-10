@@ -6,7 +6,8 @@ python:
 
 env:
   global:
-    - secure: HzCsLlN4RQl0rqG/cE5DB1U67+Vp70oWFK8OzomNzajc1bU586DghxCngyo+GZXNxrKnuqh4v/I3U+1gsnQvF5YCRSr9JJGhToTlG9PGFhHl/97V33lCp1bEhdvj1MWlhOr3LPNbjWcUNAyTYGU5QJ6KgyWM6rNv+JWZW/RKLCxdmVFtLTfZNhA5KOFMrxfWbdgxiwJFvxwvFHihsi9LJ+NEC9WdChoeXhgSAZr593fyP5VWI0ewizwc4a2j/F4c3wBmukP/elzfeNE2V3XeSwztxQeQAkOYRypsvbxtPDFaOj+sQD9uvqghHRHxi4DQvDYOKs4meIM4B7l/Yb/FNWOf4RPN8xjHh6aojJ1yY87LYfxrboo8sBrFZXAkxLQO4SHjYeBhVfEiw5JfrCOq2A+wl3lLuXuXjVSuWevvhHlbt0OxxfdusR25J2XyNuu2o2KfFLgx7FITpl20QpXXFlHZ+gQqQAIvq1Yg6E1FsYurCmR9YuaaR67l9HyaGW6aTcf764mUkV7zLuHZYbNWbV66qIUv+VZaDFTcKMoK7Y3tML3HOGe+Vql89RQuySN5vE+XC1PJ5wfpPrXKw4RKT0iKk9rqVm8ULuJ6r+5kKEwLNZnrcXpFxPvpTyWaNc82ckyn1eW0PTwvFVjskrs/gJY4Co/5b2ZZUNb4Ryl9agk=
+    - CC_TEST_REPORTER_ID=b546ab5aec94787a647d578a09345592a1b498effc7955456f9614b53b559e5b
+    # - secure: HzCsLlN4RQl0rqG/cE5DB1U67+Vp70oWFK8OzomNzajc1bU586DghxCngyo+GZXNxrKnuqh4v/I3U+1gsnQvF5YCRSr9JJGhToTlG9PGFhHl/97V33lCp1bEhdvj1MWlhOr3LPNbjWcUNAyTYGU5QJ6KgyWM6rNv+JWZW/RKLCxdmVFtLTfZNhA5KOFMrxfWbdgxiwJFvxwvFHihsi9LJ+NEC9WdChoeXhgSAZr593fyP5VWI0ewizwc4a2j/F4c3wBmukP/elzfeNE2V3XeSwztxQeQAkOYRypsvbxtPDFaOj+sQD9uvqghHRHxi4DQvDYOKs4meIM4B7l/Yb/FNWOf4RPN8xjHh6aojJ1yY87LYfxrboo8sBrFZXAkxLQO4SHjYeBhVfEiw5JfrCOq2A+wl3lLuXuXjVSuWevvhHlbt0OxxfdusR25J2XyNuu2o2KfFLgx7FITpl20QpXXFlHZ+gQqQAIvq1Yg6E1FsYurCmR9YuaaR67l9HyaGW6aTcf764mUkV7zLuHZYbNWbV66qIUv+VZaDFTcKMoK7Y3tML3HOGe+Vql89RQuySN5vE+XC1PJ5wfpPrXKw4RKT0iKk9rqVm8ULuJ6r+5kKEwLNZnrcXpFxPvpTyWaNc82ckyn1eW0PTwvFVjskrs/gJY4Co/5b2ZZUNb4Ryl9agk=
 
 install:
   - pip install -r requirements.txt
@@ -19,9 +20,10 @@ before_script:
 
 script:
   - coverage run -m unittest discover
+  - coverage xml
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build --coverage-input-type coverage.py --exit-code $TRAVIS_TEST_RESULT
 
 # notifications:
 #   slack:
