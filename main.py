@@ -34,7 +34,7 @@ def request_logs_from_cloudwatch(start_unix=None, end_unix=None, stream_prefix=N
 
 def load_from_yml(key_index):
     with open(YAML_PATH, mode='r+') as yml_data:
-        data_in_yml = yaml.load(yml_data) \
+        data_in_yml = yaml.load(yml_data, Loader=yaml.FullLoader) \
                           .get(YAML_KEY_LIST[key_index])
     return data_in_yml
 
