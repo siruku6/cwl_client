@@ -1,7 +1,7 @@
 from unittest.mock import patch
 import unittest
 
-import models.interface as i_face
+import cwl_client.interface as i_face
 
 
 class TestInterface(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestInterface(unittest.TestCase):
     #     dict_for_testcase = {1: 'swing', 2: 'scalping', 3: 'other'}
     #     with patch('builtins.print'):
     #         for key, val in dict_for_testcase.items():
-    #             with patch('models.interface.prompt_inputting_decimal', return_value=key):
+    #             with patch('cwl_client.interface.prompt_inputting_decimal', return_value=key):
     #                 result = i_face.select_from_dict(dict_for_testcase)
     #                 self.assertEqual(result, val, '選択したkeyに対応するvalを得る')
 
